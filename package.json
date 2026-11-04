@@ -1,0 +1,24 @@
+{
+  "name": "@setsig/browser",
+  "version": "0.8.0",
+  "description": "setsig.com browser & kiosk display SDK for physical presence validation",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [
+    "setsig",
+    "presence",
+    "kiosk",
+    "qr",
+    "totp",
+    "camera",
+    "verification"
+  ],
+  "author": "setsig.com",
+  "license": "Apache-2.0"
+}
+

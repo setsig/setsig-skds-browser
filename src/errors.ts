@@ -103,3 +103,4 @@ export class GeofenceOutOfBoundsError extends SetsigError {
     this.name = "GeofenceOutOfBoundsError";
   }
 }
+

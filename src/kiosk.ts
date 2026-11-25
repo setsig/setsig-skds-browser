@@ -147,11 +147,44 @@ export class SetsigKiosk {
     const codeEl = this.containerEl.querySelector("#setsig-dynamic-code");
 
     if (qrTarget && token.qrSvg) {
-      qrTarget.innerHTML = token.qrSvg;
+      const sanitizedSvg = this.parseSafeSvg(token.qrSvg);
+      if (sanitizedSvg) {
+        qrTarget.replaceChildren(sanitizedSvg);
+      }
     }
     if (codeEl) {
       codeEl.textContent = token.dynamicCode;
     }
+  }
+
+  private parseSafeSvg(rawSvg: string): SVGElement | null {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(rawSvg, "image/svg+xml");
+    if (doc.querySelector("parsererror")) {
+      return null;
+    }
+    const root = doc.documentElement;
+    if (!root || root.tagName.toLowerCase() !== "svg") {
+      return null;
+    }
+    const forbiddenTags = ["script", "foreignobject", "iframe", "object", "embed", "style"];
+    for (const tag of forbiddenTags) {
+      root.querySelectorAll(tag).forEach((el) => el.remove());
+    }
+    const allElements = [root, ...Array.from(root.querySelectorAll("*"))];
+    for (const el of allElements) {
+      for (const attr of Array.from(el.attributes)) {
+        const name = attr.name.toLowerCase();
+        const value = attr.value.trim().toLowerCase();
+        if (
+          name.startsWith("on") ||
+          ((name === "href" || name === "xlink:href") && value.startsWith("javascript:"))
+        ) {
+          el.removeAttribute(attr.name);
+        }
+      }
+    }
+    return document.importNode(root, true) as unknown as SVGElement;
   }
 
   private startCountdown(): void {

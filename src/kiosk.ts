@@ -97,6 +97,7 @@ export class SetsigKiosk {
         method: "POST",
         headers: {
           Authorization: `Bearer ${this.config.apiKey}`,
+          "X-Setsig-Client": "sdk-browser/0.8.0",
           "Content-Type": "application/json",
           Accept: "application/json",
         },
